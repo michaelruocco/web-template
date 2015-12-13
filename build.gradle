@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.3'
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+        classpath 'com.wix:wix-embedded-mysql:1.0.2'
+        classpath 'com.github.michaelruocco.mysql:embedded-mysql-plugin:0.4.0'
+        classpath 'com.sourcemuse.gradle.plugin:gradle-mongo-plugin:0.8.0'
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'
+apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'embedded-mysql'
+apply plugin: 'mongo'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.springframework:spring-webmvc:4.2.2.RELEASE'
+    compile 'org.springframework:spring-jdbc:4.2.2.RELEASE'
+    compile 'javax.servlet:jstl:1.2'
+    compile 'mysql:mysql-connector-java:5.1.37'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.1.2'
+    compile 'org.springframework.data:spring-data-mongodb:1.8.1.RELEASE'
+    compile 'log4j:log4j:1.2.17'
+
+    testCompile 'junit:junit:4.11'
+
+    tomcat 'org.apache.tomcat:catalina:6.0.43'
+    tomcat 'org.apache.tomcat:coyote:6.0.43'
+    tomcat 'org.apache.tomcat:jasper:6.0.43'
+}
+
+flyway {
+    url = 'jdbc:mysql://localhost:3306/template'
+    user = 'root'
+    password = ''
+}
+
+embeddedMysql {
+    databaseName = 'template'
+    version = 'v5_6_22'
+}
