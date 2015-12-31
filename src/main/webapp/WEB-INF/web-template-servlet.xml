@@ -49,7 +49,4 @@
     <context:component-scan base-package="uk.co.tpplc.mruoc" />
     <mvc:annotation-driven />
 
-
-    
-
 </beans>
