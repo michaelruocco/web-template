@@ -18,7 +18,7 @@
         <property name="suffix" value=".jsp" />
     </bean>
 
-    <!--<bean id="mysqlDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <bean id="mysqlDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
         <property name="url" value="jdbc:mysql://localhost:3306/template" />
         <property name="username" value="root" />
@@ -27,9 +27,9 @@
 
     <bean id="mysqlCustomerService" class="uk.co.tpplc.mruoc.service.MysqlCustomerService">
         <constructor-arg ref="mysqlDataSource" />
-    </bean>-->
+    </bean>
 
-    <bean id="mongoFactory" class="org.springframework.data.mongodb.core.MongoFactoryBean">
+    <!--<bean id="mongoFactory" class="org.springframework.data.mongodb.core.MongoFactoryBean">
         <property name="host" value="localhost"/>
     </bean>
 
@@ -40,10 +40,10 @@
 
     <bean id="mongoCustomerService" class="uk.co.tpplc.mruoc.service.MongoCustomerService">
         <constructor-arg ref="mongo" />
-    </bean>
+    </bean>-->
 
     <bean id="customerFacade" class="uk.co.tpplc.mruoc.facade.CustomerFacade">
-        <constructor-arg ref="mongoCustomerService" />
+        <constructor-arg ref="mysqlCustomerService" />
     </bean>
 
     <context:component-scan base-package="uk.co.tpplc.mruoc" />
