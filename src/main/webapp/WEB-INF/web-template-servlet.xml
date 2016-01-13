@@ -25,7 +25,7 @@
         <property name="password" value="" />
     </bean>
 
-    <bean id="mysqlCustomerService" class="uk.co.tpplc.mruoc.service.MysqlCustomerService">
+    <bean id="mysqlCustomerService" class="uk.co.mruoc.service.MysqlCustomerService">
         <constructor-arg ref="mysqlDataSource" />
     </bean>
 
@@ -38,15 +38,15 @@
         <constructor-arg value="template"/>
     </bean>
 
-    <bean id="mongoCustomerService" class="uk.co.tpplc.mruoc.service.MongoCustomerService">
+    <bean id="mongoCustomerService" class="MongoCustomerService">
         <constructor-arg ref="mongo" />
     </bean>-->
 
-    <bean id="customerFacade" class="uk.co.tpplc.mruoc.facade.CustomerFacade">
+    <bean id="customerFacade" class="uk.co.mruoc.facade.CustomerFacade">
         <constructor-arg ref="mysqlCustomerService" />
     </bean>
 
-    <context:component-scan base-package="uk.co.tpplc.mruoc" />
+    <context:component-scan base-package="uk.co.mruoc" />
     <mvc:annotation-driven />
 
 </beans>
