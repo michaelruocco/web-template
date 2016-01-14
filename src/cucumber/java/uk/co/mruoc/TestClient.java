@@ -1,7 +1,6 @@
 package uk.co.mruoc;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -12,32 +11,57 @@ import org.apache.http.impl.client.HttpClients;
 import uk.co.mruoc.dto.CustomerDto;
 
 import java.io.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TestClient {
 
     private static final String CUSTOMERS_URL = "http://localhost:8080/web-template/ws/v1/customers";
+    private static final String PAGED_CUSTOMERS_URL = CUSTOMERS_URL + "?limit=%d&offset=%d";
+    private static final String GET_CUSTOMER_URL = CUSTOMERS_URL + "/%s";
 
     private final Gson gson = new Gson();
 
-    public void createCustomer(CustomerDto customer) {
+    public CustomerResponse createCustomer(CustomerDto customer) {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             HttpPost post = createPost(customer);
             System.out.println("posting customer " + customer.getFullName());
             try (CloseableHttpResponse response = client.execute(post)) {
-                System.out.println("response " + response.getStatusLine().getStatusCode() + " " + response.getStatusLine().getReasonPhrase());
+                return new CustomerResponse(response);
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    public List<CustomerDto> getAllCustomers() {
+    public CustomerResponse getCustomers() {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
-            HttpGet get = new HttpGet(CUSTOMERS_URL);
+            HttpGet get = createGet(CUSTOMERS_URL);
             try (CloseableHttpResponse response = client.execute(get)) {
-                return getCustomers(response);
+                return new CustomerResponse(response);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public CustomerResponse getCustomers(int pageSize, int pageNumber) {
+        int offset = calculateOffset(pageSize, pageNumber);
+        String url = String.format(PAGED_CUSTOMERS_URL, pageSize, offset);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpGet get = createGet(url);
+            try (CloseableHttpResponse response = client.execute(get)) {
+                return new CustomerResponse(response);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public CustomerResponse getCustomer(String accountNumber) {
+        String url = String.format(GET_CUSTOMER_URL, accountNumber);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpGet get = createGet(url);
+            try (CloseableHttpResponse response = client.execute(get)) {
+                return new CustomerResponse(response);
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -45,6 +69,7 @@ public class TestClient {
     }
 
     private HttpPost createPost(CustomerDto customer) {
+        System.out.println("creating POST request for " + CUSTOMERS_URL);
         HttpPost post = new HttpPost(CUSTOMERS_URL);
         post.setEntity(toEntity(customer));
         post.setHeader("Content-type", "application/json");
@@ -53,29 +78,21 @@ public class TestClient {
 
     private HttpEntity toEntity(CustomerDto customer) {
         try {
-            System.out.println("building entity with string " + gson.toJson(customer));
+            System.out.println("customer balance " + customer.getBalance());
+            System.out.println("building entity with string " + gson.toJson(customer).replaceAll(".0", ""));
             return new StringEntity(gson.toJson(customer));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private List<CustomerDto> getCustomers(CloseableHttpResponse response) {
-        String content = readContent(response);
-        return gson.fromJson(content, new TypeToken<List<CustomerDto>>(){}.getType());
+    private int calculateOffset(int pageSize, int pageNumber) {
+        return ((pageNumber - 1) * pageSize);
     }
 
-
-    private String readContent(CloseableHttpResponse response) {
-        try {
-            HttpEntity entity = response.getEntity();
-            InputStream stream = entity.getContent();
-            try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
-                return buffer.lines().collect(Collectors.joining("\n"));
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    private HttpGet createGet(String url) {
+        System.out.println("creating GET request for " + url);
+        return new HttpGet(url);
     }
 
 }
