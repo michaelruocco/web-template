@@ -53,12 +53,11 @@ Feature: Customer Maintenance
       | 000008 | Chris     | Stone   | 22222   |
     When the customer data is posted
     Then the service returns a response code 201
-    And a get request is made for customer "000008"
     And the following customer is returned
       | id     | firstName | surname | balance |
       | 000008 | Chris     | Stone   | 22222   |
 
-  Scenario: Attempt to create duplicate customer
+  Scenario: Attempt to create customer with duplicate id
     Given the following customers exist
       | id     | firstName | surname | balance |
       | 000009 | Dean      | Heatlie | 33333   |
