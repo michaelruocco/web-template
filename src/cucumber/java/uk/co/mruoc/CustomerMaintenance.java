@@ -74,6 +74,12 @@ public class CustomerMaintenance {
         assertThat(error.getMessage()).isEqualTo(expectedMessage);
     }
 
+    @Then("^the response header contains \"([^\"]*)\" with value \"([^\"]*)\"$")
+    public void the_response_header_contains_with_value(String headerName, String expectedHeaderValue) throws Throwable {
+        String headerValue = customerResponse.getHeader(headerName);
+        assertThat(headerValue).isEqualTo(expectedHeaderValue);
+    }
+
     private void assertMatchesReturnedCustomers(List<CustomerDto> expectedCustomers) {
         List<CustomerDto> customers = customerResponse.getCustomers();
         assertThat(customers.size()).isEqualTo(expectedCustomers.size());

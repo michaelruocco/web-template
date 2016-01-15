@@ -56,6 +56,7 @@ Feature: Customer Maintenance
     And the following customer is returned
       | id     | firstName | surname | balance |
       | 000008 | Chris     | Stone   | 22222   |
+    And the response header contains "Location" with value "http://localhost:8080/web-template/ws/v1/customers/000008"
 
   Scenario: Attempt to create customer with duplicate id
     Given the following customers exist

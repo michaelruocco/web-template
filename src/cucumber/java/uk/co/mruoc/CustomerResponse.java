@@ -2,6 +2,7 @@ package uk.co.mruoc;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import uk.co.mruoc.dto.CustomerDto;
@@ -15,11 +16,13 @@ public class CustomerResponse {
 
     private final Gson gson = new Gson();
     private final int statusCode;
+    private final Header[] headers;
     private final String statusMessage;
     private final String content;
 
     public CustomerResponse(CloseableHttpResponse response) {
         this.statusCode = getStatusCode(response);
+        this.headers = response.getAllHeaders();
         this.statusMessage = getStatusMessage(response);
         this.content = getContent(response);
 
@@ -41,6 +44,15 @@ public class CustomerResponse {
 
     public ErrorDto getError() {
         return gson.fromJson(content, new TypeToken<ErrorDto>(){}.getType());
+    }
+
+    public String getHeader(String name) {
+        for(Header header : headers) {
+            if (header.getName().equals(name)) {
+                return header.getValue();
+            }
+        }
+        return "";
     }
 
     private int getStatusCode(CloseableHttpResponse response) {
