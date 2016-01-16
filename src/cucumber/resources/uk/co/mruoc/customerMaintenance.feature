@@ -13,6 +13,7 @@ Feature: Customer Maintenance
       | 000000 | Michael   | Ruocco  | 10000   |
       | 000001 | Kiel      | Boatman | 5000    |
       | 000002 | Craig     | Betts   | 7500    |
+    And the response header contains "X-Total-Count" with value "3"
 
   Scenario: Get all customers paged
     Given the following customers exist
@@ -30,6 +31,7 @@ Feature: Customer Maintenance
       | 000000 | Michael   | Ruocco  | 10000   |
       | 000001 | Kiel      | Boatman | 5000    |
       | 000002 | Craig     | Betts   | 7500    |
+    And the response header contains "X-Total-Count" with value "6"
 
   Scenario: Get single customer
     Given the following customers exist
