@@ -100,3 +100,9 @@ Feature: Customer Maintenance
     And we want to delete the customer with id "000011"
     When the customer data is deleted
     Then the service returns a response code 204
+
+  Scenario: Delete customer that does not exist
+    Given no customer exists with id "000012"
+    And we want to delete the customer with id "000012"
+    When the customer data is deleted
+    Then the service returns a response code 204

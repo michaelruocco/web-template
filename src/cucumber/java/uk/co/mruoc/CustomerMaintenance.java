@@ -6,6 +6,7 @@ import cucumber.api.java.en.When;
 import uk.co.mruoc.dto.CustomerDto;
 import uk.co.mruoc.dto.ErrorDto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -108,8 +109,15 @@ public class CustomerMaintenance {
         for (int i = 0; i < expectedCustomers.size(); i++) {
             CustomerDto customer = customers.get(i);
             CustomerDto expectedCustomer = expectedCustomers.get(i);
+            removeDecimalPlaceFromBalance(expectedCustomer);
             assertThat(customer).isEqualToComparingFieldByField(expectedCustomer);
         }
+    }
+
+    // cucumber interprets big decimal integer values with a .0 appended
+    // this method removes this so that asserts with results match as expected
+    private void removeDecimalPlaceFromBalance(CustomerDto customer) {
+        customer.setBalance(new BigDecimal(customer.getBalance().intValueExact()));
     }
 
 }
