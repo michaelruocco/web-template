@@ -42,7 +42,7 @@
         <constructor-arg ref="mongo" />
     </bean>-->
 
-    <bean id="customerFacade" class="uk.co.mruoc.facade.CustomerFacade">
+    <bean id="customerFacade" class="uk.co.mruoc.facade.DefaultCustomerFacade">
         <constructor-arg ref="mysqlCustomerService" />
     </bean>
 

@@ -105,7 +105,7 @@ public class CustomerMaintenance {
     private void assertMatchesReturnedCustomers(List<CustomerDto> expectedCustomers) {
         List<CustomerDto> customers = customerResponse.getCustomers();
         assertThat(customers.size()).isEqualTo(expectedCustomers.size());
-        for (int i = 0; i > 0; i++) {
+        for (int i = 0; i < expectedCustomers.size(); i++) {
             CustomerDto customer = customers.get(i);
             CustomerDto expectedCustomer = expectedCustomers.get(i);
             assertThat(customer).isEqualToComparingFieldByField(expectedCustomer);

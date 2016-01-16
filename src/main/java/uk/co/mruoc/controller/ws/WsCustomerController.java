@@ -8,10 +8,11 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.co.mruoc.exception.CustomerNotFoundException;
 import uk.co.mruoc.exception.InvalidCustomerIdException;
-import uk.co.mruoc.facade.CustomerFacade;
 import uk.co.mruoc.dto.CustomerDto;
 import uk.co.mruoc.dto.ErrorDto;
 import uk.co.mruoc.exception.CustomerIdAlreadyUsedException;
+import uk.co.mruoc.facade.CustomerFacade;
+import uk.co.mruoc.facade.DefaultCustomerFacade;
 
 import java.net.URI;
 import java.util.List;
@@ -33,6 +34,10 @@ public class WsCustomerController {
 
     @Autowired
     private CustomerFacade customerFacade;
+
+    public void setCustomerFacade(CustomerFacade customerFacade) {
+        this.customerFacade = customerFacade;
+    }
 
     @RequestMapping(value = MULTIPLE_ENDPOINT, method = GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CustomerDto>> getCustomers(
