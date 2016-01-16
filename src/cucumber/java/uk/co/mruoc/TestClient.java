@@ -2,28 +2,28 @@ package uk.co.mruoc;
 
 import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.log4j.Logger;
 import uk.co.mruoc.dto.CustomerDto;
 
 import java.io.*;
 
 public class TestClient {
 
+    private static final Logger LOG = Logger.getLogger(TestClient.class);
+
     private static final String CUSTOMERS_URL = "http://localhost:8080/web-template/ws/v1/customers";
     private static final String PAGED_CUSTOMERS_URL = CUSTOMERS_URL + "?limit=%d&offset=%d";
-    private static final String GET_CUSTOMER_URL = CUSTOMERS_URL + "/%s";
+    private static final String CUSTOMER_URL = CUSTOMERS_URL + "/%s";
 
     private final Gson gson = new Gson();
 
     public CustomerResponse createCustomer(CustomerDto customer) {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             HttpPost post = createPost(customer);
-            System.out.println("posting customer " + customer.getFullName());
             try (CloseableHttpResponse response = client.execute(post)) {
                 return new CustomerResponse(response);
             }
@@ -56,8 +56,8 @@ public class TestClient {
         }
     }
 
-    public CustomerResponse getCustomer(String accountNumber) {
-        String url = String.format(GET_CUSTOMER_URL, accountNumber);
+    public CustomerResponse getCustomer(String id) {
+        String url = String.format(CUSTOMER_URL, id);
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             HttpGet get = createGet(url);
             try (CloseableHttpResponse response = client.execute(get)) {
@@ -68,19 +68,60 @@ public class TestClient {
         }
     }
 
+    public CustomerResponse updateCustomer(CustomerDto customer) {
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpPut put = createPut(customer);
+            try (CloseableHttpResponse response = client.execute(put)) {
+                return new CustomerResponse(response);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public CustomerResponse deleteCustomer(String id) {
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpDelete delete = createDelete(id);
+            try (CloseableHttpResponse response = client.execute(delete)) {
+                return new CustomerResponse(response);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
     private HttpPost createPost(CustomerDto customer) {
-        System.out.println("creating POST request for " + CUSTOMERS_URL);
+        logInfo("creating POST request for " + CUSTOMERS_URL);
         HttpPost post = new HttpPost(CUSTOMERS_URL);
         post.setEntity(toEntity(customer));
         post.setHeader("Content-type", "application/json");
         return post;
     }
 
+    private HttpPut createPut(CustomerDto customer) {
+        logInfo("creating PUT request for " + CUSTOMERS_URL);
+        HttpPut put = new HttpPut(CUSTOMERS_URL);
+        put.setEntity(toEntity(customer));
+        put.setHeader("Content-type", "application/json");
+        return put;
+    }
+
+    private HttpGet createGet(String url) {
+        logInfo("creating GET request for " + url);
+        return new HttpGet(url);
+    }
+
+    private HttpDelete createDelete(String id) {
+        String url = String.format(CUSTOMER_URL, id);
+        logInfo("creating DELETE request for " + url);
+        return new HttpDelete(url);
+    }
+
     private HttpEntity toEntity(CustomerDto customer) {
         try {
-            System.out.println("customer balance " + customer.getBalance());
-            System.out.println("building entity with string " + gson.toJson(customer).replaceAll(".0", ""));
-            return new StringEntity(gson.toJson(customer));
+            String json = gson.toJson(customer);
+            logInfo("building entity with string " + json);
+            return new StringEntity(json);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -90,9 +131,8 @@ public class TestClient {
         return ((pageNumber - 1) * pageSize);
     }
 
-    private HttpGet createGet(String url) {
-        System.out.println("creating GET request for " + url);
-        return new HttpGet(url);
+    private void logInfo(String message) {
+        LOG.info(message);
     }
 
 }

@@ -68,3 +68,33 @@ Feature: Customer Maintenance
     When the customer data is posted
     Then the service returns a response code 409
     And the service returns error message "customer id 000009 already in use"
+
+  Scenario: Update customer
+    Given the following customers exist
+      | id     | firstName | surname | balance |
+      | 000009 | Dean      | Heatlie | 33333   |
+    And we want to update the customer data to
+      | id     | firstName | surname  | balance |
+      | 000009 | Updated   | Customer | 77777   |
+    When the customer data is updated
+    Then the service returns a response code 200
+    And the following customer is returned
+      | id     | firstName | surname  | balance |
+      | 000009 | Updated   | Customer | 77777   |
+
+  Scenario: Update customer that does not exist
+    Given no customer exists with id "000010"
+    And we want to update the customer data to
+      | id     | firstName | surname  | balance |
+      | 000010 | Updated   | Customer | 77777   |
+    When the customer data is updated
+    Then the service returns a response code 404
+    And the service returns error message "customer id 000010 does not exist"
+
+  Scenario: Delete customer
+    Given the following customers exist
+      | id     | firstName | surname | balance |
+      | 000011 | Laura      | Noble | 88888   |
+    And we want to delete the customer with id "000011"
+    When the customer data is deleted
+    Then the service returns a response code 204

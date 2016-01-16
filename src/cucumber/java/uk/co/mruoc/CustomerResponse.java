@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.log4j.Logger;
 import uk.co.mruoc.dto.CustomerDto;
 import uk.co.mruoc.dto.ErrorDto;
 
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CustomerResponse {
+
+    private static final Logger LOG = Logger.getLogger(CustomerResponse.class);
 
     private final Gson gson = new Gson();
     private final int statusCode;
@@ -25,9 +28,9 @@ public class CustomerResponse {
         this.headers = response.getAllHeaders();
         this.statusMessage = getStatusMessage(response);
         this.content = getContent(response);
-
-        System.out.println("got status code " + statusCode);
-        System.out.println("got content " + content);
+        logInfo("got status code " + statusCode);
+        logInfo("got content " + content);
+        logInfo("status message " + statusMessage);
     }
 
     public CustomerDto getCustomer() {
@@ -66,6 +69,9 @@ public class CustomerResponse {
     private String getContent(CloseableHttpResponse response) {
         try {
             HttpEntity entity = response.getEntity();
+            if (entity == null) {
+                return "";
+            }
             InputStream stream = entity.getContent();
             try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
                 return buffer.lines().collect(Collectors.joining("\n"));
@@ -73,6 +79,10 @@ public class CustomerResponse {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private void logInfo(String message) {
+        LOG.info(message);
     }
 
 }

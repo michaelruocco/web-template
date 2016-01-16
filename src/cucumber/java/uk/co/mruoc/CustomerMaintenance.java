@@ -16,6 +16,8 @@ public class CustomerMaintenance {
 
     private CustomerResponse customerResponse;
     private CustomerDto newCustomer;
+    private CustomerDto updateCustomer;
+    private String deleteId;
 
     @Given("^the following customers exist$")
     public void the_following_customers_exist(List<CustomerDto> inputCustomers) throws Throwable {
@@ -37,6 +39,16 @@ public class CustomerMaintenance {
         // intentionally blank
     }
 
+    @Given("^we want to update the customer data to$")
+    public void we_want_to_update_the_customer_data_to(List<CustomerDto> inputCustomers) throws Throwable {
+        this.updateCustomer = inputCustomers.get(0);
+    }
+
+    @Given("^we want to delete the customer with id \"([^\"]*)\"$")
+    public void we_want_to_delete_the_customer_with_id(String deleteId) throws Throwable {
+        this.deleteId = deleteId;
+    }
+
     @When("^a get request is made for all customers$")
     public void a_get_request_is_made_for_all_customers() throws Throwable {
         customerResponse = client.getCustomers();
@@ -50,6 +62,16 @@ public class CustomerMaintenance {
     @When("^a get request is made for customer \"([^\"]*)\"$")
     public void a_get_request_is_made_for_customer(String id) throws Throwable {
         customerResponse = client.getCustomer(id);
+    }
+
+    @When("^the customer data is updated")
+    public void the_customer_data_is_updated() throws Throwable {
+        customerResponse = client.updateCustomer(updateCustomer);
+    }
+
+    @When("^the customer data is deleted$")
+    public void the_customer_data_is_deleted() throws Throwable {
+        customerResponse = client.deleteCustomer(deleteId);
     }
 
     @Then("^the following customers are returned$")
