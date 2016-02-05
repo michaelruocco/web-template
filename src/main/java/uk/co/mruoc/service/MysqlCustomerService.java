@@ -31,7 +31,6 @@ public class MysqlCustomerService implements CustomerService {
 
     @Override
     public List<Customer> getCustomers(int limit, int offset) {
-        //TODO modifiy this to use qwery https://github.com/SeanOToole/Qwery
         String query = "select id, firstName, surname, balance from customer limit ? offset ?;";
         Object[] arguments = { limit, offset };
         return template.query(query, arguments, new CustomerRowMapper());

@@ -96,7 +96,7 @@ Feature: Customer Maintenance
   Scenario: Delete customer
     Given the following customers exist
       | id     | firstName | surname | balance |
-      | 000011 | Laura      | Noble | 88888   |
+      | 000011 | Laura     | Noble   | 88888   |
     And we want to delete the customer with id "000011"
     When the customer data is deleted
     Then the service returns a response code 204
