@@ -1,4 +1,5 @@
 <!DOCTYPE HTML>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
   <head>
     <title>${name}</title>
@@ -24,6 +25,7 @@
         </tr>
       </table>
       <input type="submit" value="Update">
+      <a href="<c:url value = '/listCustomers' />">Back</a>
     </form>
   </body>
 </html>
