@@ -1,5 +1,6 @@
 package uk.co.mruoc.service;
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.co.mruoc.exception.CustomerNotFoundException;
@@ -52,11 +53,10 @@ public class MysqlCustomerService implements CustomerService {
 
     @Override
     public void create(Customer customer) {
-        if (!validator.hasValidId(customer))
-            throw new InvalidCustomerIdException(customer.getId());
-
         if (alreadyExists(customer.getId()))
             throw new CustomerIdAlreadyUsedException(customer.getId());
+
+        validator.validate(customer);
 
         String query = "insert into customer (firstName, surname, balance, id) values (?,?,?,?);";
         CustomerArgumentMapper mapper = new CustomerArgumentMapper(customer);
@@ -67,6 +67,8 @@ public class MysqlCustomerService implements CustomerService {
     public void update(Customer customer) {
         if (!alreadyExists(customer.getId()))
             throw new CustomerNotFoundException(customer.getId());
+
+        validator.validate(customer);
 
         String query = "update customer set firstName = ?, surname = ?, balance = ? where id = ?;";
         CustomerArgumentMapper mapper = new CustomerArgumentMapper(customer);

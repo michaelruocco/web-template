@@ -1,6 +1,6 @@
 package uk.co.mruoc.exception;
 
-public class CustomerNotFoundException extends RuntimeException {
+public class CustomerNotFoundException extends CustomerException {
 
     private static final String MESSAGE = "customer id %s does not exist";
 

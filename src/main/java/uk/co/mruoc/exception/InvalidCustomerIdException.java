@@ -1,6 +1,6 @@
 package uk.co.mruoc.exception;
 
-public class InvalidCustomerIdException extends RuntimeException {
+public class InvalidCustomerIdException extends InvalidCustomerException {
 
     private static final String MESSAGE = "customer id %s is not valid, it must be 6 digits";
 

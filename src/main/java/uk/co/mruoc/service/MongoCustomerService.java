@@ -53,11 +53,10 @@ public class MongoCustomerService implements CustomerService {
 
     @Override
     public void create(Customer customer) {
-        if (!validator.hasValidId(customer))
-            throw new InvalidCustomerIdException(customer.getId());
-
         if (alreadyExists(customer.getId()))
             throw new CustomerIdAlreadyUsedException(customer.getId());
+
+        validator.validate(customer);
 
         upsert(customer);
     }
@@ -66,6 +65,9 @@ public class MongoCustomerService implements CustomerService {
     public void update(Customer customer) {
         if (!alreadyExists(customer.getId()))
             throw new CustomerNotFoundException(customer.getId());
+
+        validator.validate(customer);
+
         upsert(customer);
     }
 

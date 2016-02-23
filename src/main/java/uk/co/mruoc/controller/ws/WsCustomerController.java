@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.co.mruoc.exception.CustomerNotFoundException;
-import uk.co.mruoc.exception.InvalidCustomerIdException;
+import uk.co.mruoc.exception.InvalidCustomerException;
 import uk.co.mruoc.dto.CustomerDto;
 import uk.co.mruoc.dto.ErrorDto;
 import uk.co.mruoc.exception.CustomerIdAlreadyUsedException;
 import uk.co.mruoc.facade.CustomerFacade;
-import uk.co.mruoc.facade.DefaultCustomerFacade;
 
 import java.net.URI;
 import java.util.List;
@@ -34,10 +33,6 @@ public class WsCustomerController {
 
     @Autowired
     private CustomerFacade customerFacade;
-
-    public void setCustomerFacade(CustomerFacade customerFacade) {
-        this.customerFacade = customerFacade;
-    }
 
     @RequestMapping(value = MULTIPLE_ENDPOINT, method = GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CustomerDto>> getCustomers(
@@ -65,8 +60,8 @@ public class WsCustomerController {
             return handleCreateCustomer(customer, uriBuilder);
         } catch (CustomerIdAlreadyUsedException e) {
             return handleDuplicateCustomerId(e);
-        } catch (InvalidCustomerIdException e) {
-            return handleInvalidCustomerId(e);
+        } catch (InvalidCustomerException e) {
+            return handleInvalidCustomer(e);
         }
     }
 
@@ -77,6 +72,8 @@ public class WsCustomerController {
             return new ResponseEntity<>(customer, OK);
         } catch (CustomerNotFoundException e) {
             return handleCustomerDoesNotExist(e);
+        } catch (InvalidCustomerException e) {
+            return handleInvalidCustomer(e);
         }
     }
 
@@ -102,7 +99,7 @@ public class WsCustomerController {
         return new ResponseEntity<>(error, CONFLICT);
     }
 
-    private ResponseEntity<?> handleInvalidCustomerId(Throwable t) {
+    private ResponseEntity<?> handleInvalidCustomer(Throwable t) {
         ErrorDto error = buildError(t);
         return new ResponseEntity<>(error, UNPROCESSABLE_ENTITY);
     }

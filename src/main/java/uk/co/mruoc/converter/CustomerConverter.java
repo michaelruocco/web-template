@@ -1,8 +1,10 @@
 package uk.co.mruoc.converter;
 
 import uk.co.mruoc.dto.CustomerDto;
+import uk.co.mruoc.exception.InvalidCustomerBalanceException;
 import uk.co.mruoc.model.Customer;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class CustomerConverter {
         dto.setId(customer.getId());
         dto.setFirstName(customer.getFirstName());
         dto.setSurname(customer.getSurname());
-        dto.setBalance(customer.getBalance());
+        dto.setBalance(balanceAsString(customer));
         return dto;
     }
 
@@ -31,8 +33,22 @@ public class CustomerConverter {
                 .setId(dto.getId())
                 .setFirstName(dto.getFirstName())
                 .setSurname(dto.getSurname())
-                .setBalance(dto.getBalance())
+                .setBalance(balanceAsBigDecimal(dto))
                 .build();
+    }
+
+    private BigDecimal balanceAsBigDecimal(CustomerDto dto) {
+        String balance = dto.getBalance();
+        try {
+            return new BigDecimal(balance);
+        } catch (NumberFormatException e) {
+            throw new InvalidCustomerBalanceException(balance, e);
+        }
+    }
+
+    private String balanceAsString(Customer customer) {
+        BigDecimal balance = customer.getBalance();
+        return balance.toString();
     }
 
 }

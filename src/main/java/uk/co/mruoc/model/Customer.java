@@ -39,6 +39,14 @@ public class Customer {
         return balance;
     }
 
+    public String getFullName() {
+        StringBuilder s = new StringBuilder();
+        s.append(firstName);
+        s.append(" ");
+        s.append(surname);
+        return s.toString().trim();
+    }
+
     public static class CustomerBuilder {
 
         private String id;

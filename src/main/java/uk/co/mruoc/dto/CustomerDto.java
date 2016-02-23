@@ -1,13 +1,11 @@
 package uk.co.mruoc.dto;
 
-import java.math.BigDecimal;
-
 public class CustomerDto {
 
     private String id;
     private String firstName;
     private String surname;
-    private BigDecimal balance;
+    private String balance;
 
     public String getId() {
         return id;
@@ -33,11 +31,11 @@ public class CustomerDto {
         this.surname = surname;
     }
 
-    public BigDecimal getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(BigDecimal balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 
@@ -46,7 +44,7 @@ public class CustomerDto {
         s.append(firstName);
         s.append(" ");
         s.append(surname);
-        return s.toString();
+        return s.toString().trim();
     }
 
 }
