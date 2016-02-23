@@ -1,4 +1,4 @@
-package uk.co.mruoc.exception;
+package uk.co.mruoc;
 
 public class CustomerException extends RuntimeException {
 

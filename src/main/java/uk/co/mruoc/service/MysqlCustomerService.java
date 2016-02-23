@@ -1,11 +1,9 @@
 package uk.co.mruoc.service;
 
-import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import uk.co.mruoc.exception.CustomerNotFoundException;
-import uk.co.mruoc.exception.InvalidCustomerIdException;
-import uk.co.mruoc.exception.CustomerIdAlreadyUsedException;
+import uk.co.mruoc.CustomerIdAlreadyUsedException;
+import uk.co.mruoc.CustomerNotFoundException;
 import uk.co.mruoc.model.Customer;
 
 import javax.sql.DataSource;

@@ -6,8 +6,8 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.log4j.Logger;
-import uk.co.mruoc.dto.CustomerDto;
-import uk.co.mruoc.dto.ErrorDto;
+import uk.co.mruoc.controller.CustomerDto;
+import uk.co.mruoc.controller.ErrorDto;
 
 import java.io.*;
 import java.util.List;

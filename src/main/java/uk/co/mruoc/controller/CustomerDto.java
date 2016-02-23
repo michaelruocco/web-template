@@ -1,4 +1,4 @@
-package uk.co.mruoc.dto;
+package uk.co.mruoc.controller;
 
 public class CustomerDto {
 

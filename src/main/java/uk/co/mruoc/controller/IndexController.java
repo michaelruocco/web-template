@@ -1,4 +1,4 @@
-package uk.co.mruoc.controller.web;
+package uk.co.mruoc.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,6 +1,6 @@
 package uk.co.mruoc.facade;
 
-import uk.co.mruoc.dto.CustomerDto;
+import uk.co.mruoc.controller.CustomerDto;
 
 import java.util.List;
 

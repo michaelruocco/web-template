@@ -1,7 +1,7 @@
-package uk.co.mruoc.converter;
+package uk.co.mruoc.facade;
 
-import uk.co.mruoc.dto.CustomerDto;
-import uk.co.mruoc.exception.InvalidCustomerBalanceException;
+import uk.co.mruoc.controller.CustomerDto;
+import uk.co.mruoc.InvalidCustomerBalanceException;
 import uk.co.mruoc.model.Customer;
 
 import java.math.BigDecimal;

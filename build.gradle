@@ -66,5 +66,5 @@ embeddedMysql {
 }
 
 tomcat {
-    daemon = false
+    daemon = true
 }

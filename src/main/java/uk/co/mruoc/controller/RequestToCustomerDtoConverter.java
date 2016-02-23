@@ -1,6 +1,4 @@
-package uk.co.mruoc.controller.web;
-
-import uk.co.mruoc.dto.CustomerDto;
+package uk.co.mruoc.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

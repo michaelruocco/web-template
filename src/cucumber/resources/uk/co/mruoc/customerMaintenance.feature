@@ -71,6 +71,32 @@ Feature: Customer Maintenance
     Then the service returns a response code 409
     And the service returns error message "customer id 000009 already in use"
 
+  Scenario: Attempt to create customer with invalid customer id
+    Given we have a new customer to create with the following data
+      | id      | firstName | surname | balance |
+      | 0000099 | Dean      | Heatlie | 33333   |
+    When the customer data is posted
+    Then the service returns a response code 422
+    And the service returns error message "customer id 0000099 is not valid, it must be 6 digits"
+
+  Scenario: Attempt to create customer with no name
+    Given no customer exists with id "000009"
+    And we have a new customer to create with the following data
+      | id     | firstName | surname | balance |
+      | 000009 |           |         | 33333   |
+    When the customer data is posted
+    Then the service returns a response code 422
+    And the service returns error message "customer name  is not valid, customer must have a first name or surname"
+
+  Scenario: Attempt to create customer with non numeric balance
+    Given no customer exists with id "000009"
+    And we have a new customer to create with the following data
+      | id     | firstName | surname | balance |
+      | 000009 | Dean      | Heatlie | test    |
+    When the customer data is posted
+    Then the service returns a response code 422
+    And the service returns error message "customer balance test is not valid, it must be a numeric value"
+
   Scenario: Update customer
     Given the following customers exist
       | id     | firstName | surname | balance |
@@ -83,6 +109,28 @@ Feature: Customer Maintenance
     And the following customer is returned
       | id     | firstName | surname  | balance |
       | 000009 | Updated   | Customer | 77777   |
+
+  Scenario: Update customer with no name
+    Given the following customers exist
+      | id     | firstName | surname | balance |
+      | 000009 | Dean      | Heatlie | 33333   |
+    And we want to update the customer data to
+      | id     | firstName | surname | balance |
+      | 000009 |           |         | 77777   |
+    When the customer data is updated
+    Then the service returns a response code 422
+    And the service returns error message "customer name  is not valid, customer must have a first name or surname"
+
+  Scenario: Update customer with non numeric balance
+    Given the following customers exist
+      | id     | firstName | surname | balance |
+      | 000009 | Dean      | Heatlie | 33333   |
+    And we want to update the customer data to
+      | id     | firstName | surname  | balance |
+      | 000009 | Updated   | Customer | test    |
+    When the customer data is updated
+    Then the service returns a response code 422
+    And the service returns error message "customer balance test is not valid, it must be a numeric value"
 
   Scenario: Update customer that does not exist
     Given no customer exists with id "000010"

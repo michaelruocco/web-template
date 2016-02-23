@@ -5,10 +5,9 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import uk.co.mruoc.exception.CustomerNotFoundException;
-import uk.co.mruoc.exception.InvalidCustomerIdException;
+import uk.co.mruoc.CustomerIdAlreadyUsedException;
+import uk.co.mruoc.CustomerNotFoundException;
 import uk.co.mruoc.model.Customer;
-import uk.co.mruoc.exception.CustomerIdAlreadyUsedException;
 
 import java.util.List;
 

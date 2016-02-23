@@ -1,4 +1,4 @@
-package uk.co.mruoc.controller.ws;
+package uk.co.mruoc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -6,11 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import uk.co.mruoc.exception.CustomerNotFoundException;
-import uk.co.mruoc.exception.InvalidCustomerException;
-import uk.co.mruoc.dto.CustomerDto;
-import uk.co.mruoc.dto.ErrorDto;
-import uk.co.mruoc.exception.CustomerIdAlreadyUsedException;
+import uk.co.mruoc.CustomerNotFoundException;
+import uk.co.mruoc.InvalidCustomerException;
+import uk.co.mruoc.CustomerIdAlreadyUsedException;
 import uk.co.mruoc.facade.CustomerFacade;
 
 import java.net.URI;
@@ -22,11 +20,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-import static uk.co.mruoc.controller.ws.RestUrl.BASE_URL;
 
 @RestController
-@RequestMapping(BASE_URL)
-public class WsCustomerController {
+@RequestMapping("/ws/v1")
+public class RestCustomerController {
+
+    public static final String BASE_URL = "/ws/v1";
 
     private static final String MULTIPLE_ENDPOINT = "/customers";
     private static final String SINGLE_ENDPOINT = "/customers/{id}";

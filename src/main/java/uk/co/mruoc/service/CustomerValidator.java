@@ -1,8 +1,8 @@
 package uk.co.mruoc.service;
 
 import com.mysql.jdbc.StringUtils;
-import uk.co.mruoc.exception.InvalidCustomerIdException;
-import uk.co.mruoc.exception.InvalidCustomerNameException;
+import uk.co.mruoc.InvalidCustomerIdException;
+import uk.co.mruoc.InvalidCustomerNameException;
 import uk.co.mruoc.model.Customer;
 
 import java.util.regex.Matcher;

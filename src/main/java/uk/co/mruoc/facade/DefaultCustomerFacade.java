@@ -1,8 +1,7 @@
 package uk.co.mruoc.facade;
 
 import uk.co.mruoc.service.CustomerService;
-import uk.co.mruoc.converter.CustomerConverter;
-import uk.co.mruoc.dto.CustomerDto;
+import uk.co.mruoc.controller.CustomerDto;
 import uk.co.mruoc.model.Customer;
 
 import java.util.List;

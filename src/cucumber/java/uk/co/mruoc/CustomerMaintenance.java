@@ -3,8 +3,9 @@ package uk.co.mruoc;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import uk.co.mruoc.dto.CustomerDto;
-import uk.co.mruoc.dto.ErrorDto;
+import org.springframework.http.HttpStatus;
+import uk.co.mruoc.controller.CustomerDto;
+import uk.co.mruoc.controller.ErrorDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,7 +38,9 @@ public class CustomerMaintenance {
 
     @Given("^no customer exists with id \"([^\"]*)\"$")
     public void no_customer_exists_with_id(String id) throws Throwable {
-        // intentionally blank
+        CustomerResponse response = client.getCustomer(id);
+        if (response.getStatusCode() == HttpStatus.OK.value())
+            client.deleteCustomer(id);
     }
 
     @Given("^we want to update the customer data to$")
@@ -109,15 +112,8 @@ public class CustomerMaintenance {
         for (int i = 0; i < expectedCustomers.size(); i++) {
             CustomerDto customer = customers.get(i);
             CustomerDto expectedCustomer = expectedCustomers.get(i);
-            removeDecimalPlaceFromBalance(expectedCustomer);
             assertThat(customer).isEqualToComparingFieldByField(expectedCustomer);
         }
-    }
-
-    // cucumber interprets big decimal integer values with a .0 appended
-    // this method removes this so that asserts with results match as expected
-    private void removeDecimalPlaceFromBalance(CustomerDto customer) {
-        customer.setBalance(new BigDecimal(customer.getBalance().intValueExact()));
     }
 
 }
