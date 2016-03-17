@@ -65,6 +65,26 @@ embeddedMysql {
     version = 'v5_6_22'
 }
 
-tomcat {
+task startTomcat(type: com.bmuschko.gradle.tomcat.tasks.TomcatRunWar) {
+    daemon = false
+}
+
+task startTomcatDaemon(type: com.bmuschko.gradle.tomcat.tasks.TomcatRunWar) {
     daemon = true
+}
+
+task startWebApp {
+    dependsOn clean, build, startEmbeddedMysql, flywayMigrate, startTomcat
+    build.mustRunAfter clean
+    startEmbeddedMysql.mustRunAfter build
+    flywayMigrate.mustRunAfter startEmbeddedMysql
+    startTomcat.mustRunAfter flywayMigrate
+}
+
+task acceptanceTestSetUp {
+    dependsOn clean, build, startEmbeddedMysql, flywayMigrate, startTomcatDaemon
+    build.mustRunAfter clean
+    startEmbeddedMysql.mustRunAfter build
+    flywayMigrate.mustRunAfter startEmbeddedMysql
+    startTomcatDaemon.mustRunAfter flywayMigrate
 }
