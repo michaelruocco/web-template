@@ -13,9 +13,19 @@
        http://www.springframework.org/schema/jdbc
        http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
 
+    <context:component-scan base-package="uk.co.mruoc" />
+
+    <mvc:annotation-driven />
+
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/view/" />
         <property name="suffix" value=".jsp" />
+    </bean>
+
+    <bean id="documentationConfig" class="com.mangofactory.swagger.configuration.SpringSwaggerConfig"/>
+
+    <bean id="customerFacade" class="uk.co.mruoc.facade.DefaultCustomerFacade">
+        <constructor-arg ref="mysqlCustomerService" />
     </bean>
 
     <bean id="mysqlDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -41,12 +51,5 @@
     <bean id="mongoCustomerService" class="MongoCustomerService">
         <constructor-arg ref="mongo" />
     </bean>-->
-
-    <bean id="customerFacade" class="uk.co.mruoc.facade.DefaultCustomerFacade">
-        <constructor-arg ref="mysqlCustomerService" />
-    </bean>
-
-    <context:component-scan base-package="uk.co.mruoc" />
-    <mvc:annotation-driven />
 
 </beans>
