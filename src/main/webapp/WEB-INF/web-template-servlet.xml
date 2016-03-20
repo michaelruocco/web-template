@@ -14,7 +14,7 @@
        http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
 
     <context:component-scan base-package="uk.co.mruoc" />
-    <context:property-placeholder location="classpath:local.properties" />
+    <context:property-placeholder location="classpath:jdbc.properties" />
 
     <mvc:annotation-driven />
     <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>

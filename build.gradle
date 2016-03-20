@@ -57,7 +57,7 @@ dependencies {
 }
 
 Properties props = new Properties()
-props.load(new FileInputStream('src/main/resources/local.properties'))
+props.load(new FileInputStream('src/main/resources/jdbc.properties'))
 URI jdbcUri = URI.create(props.getProperty("jdbc.url").substring(5));
 
 flyway {
