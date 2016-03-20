@@ -58,6 +58,7 @@ dependencies {
 
 Properties props = new Properties()
 props.load(new FileInputStream('src/main/resources/local.properties'))
+URI jdbcUri = URI.create(props.getProperty("jdbc.url").substring(5));
 
 flyway {
     url = props.getProperty('jdbc.url')
@@ -66,9 +67,9 @@ flyway {
 }
 
 embeddedMysql {
-    databaseName = 'template'
+    databaseName = jdbcUri.getPath().substring(1);
     version = 'v5_6_22'
-    port = Integer.parseInt(props.getProperty('jdbc.port'))
+    port = jdbcUri.getPort()
 }
 
 task startTomcat(type: com.bmuschko.gradle.tomcat.tasks.TomcatRunWar) {

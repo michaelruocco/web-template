@@ -50,7 +50,7 @@ properties found in src/main/resources/local.properties to point at your own
 mysql instance. Once you have amended the properties you will need to run
 
 ```
-    gradlew clean build flywayMigrate startTomcat
+gradlew clean build flywayMigrate startTomcat
 ```
 
 This will configure the database in your own mysql instance and then start
