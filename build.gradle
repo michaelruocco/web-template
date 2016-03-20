@@ -3,12 +3,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.github.samueltbrown:gradle-cucumber-plugin:0.8"
-        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.3'
-        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
-        classpath 'com.wix:wix-embedded-mysql:1.0.2'
+        classpath "com.github.samueltbrown:gradle-cucumber-plugin:0.9"
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
+        classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
         classpath 'com.github.michaelruocco.mysql:embedded-mysql-plugin:0.4.0'
-        classpath 'com.sourcemuse.gradle.plugin:gradle-mongo-plugin:0.8.0'
+        classpath 'com.sourcemuse.gradle.plugin:gradle-mongo-plugin:0.11.0'
     }
 }
 
@@ -29,6 +28,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url "http://central.maven.org/maven2" }
 }
 
 dependencies {
@@ -51,20 +51,24 @@ dependencies {
     testCompile 'org.apache.httpcomponents:httpclient:4.5.1'
     testCompile 'com.google.code.gson:gson:2.5'
 
-    tomcat 'org.apache.tomcat:catalina:6.0.43'
-    tomcat 'org.apache.tomcat:coyote:6.0.43'
-    tomcat 'org.apache.tomcat:jasper:6.0.43'
+    tomcat 'org.apache.tomcat:tomcat-catalina:7.0.59'
+    tomcat 'org.apache.tomcat:tomcat-coyote:7.0.59'
+    tomcat 'org.apache.tomcat:tomcat-jasper:7.0.59'
 }
 
+Properties props = new Properties()
+props.load(new FileInputStream('src/main/resources/local.properties'))
+
 flyway {
-    url = 'jdbc:mysql://localhost:3306/template'
-    user = 'root'
-    password = ''
+    url = props.getProperty('jdbc.url')
+    user = props.getProperty('jdbc.username')
+    password = props.getProperty('jdbc.password')
 }
 
 embeddedMysql {
     databaseName = 'template'
     version = 'v5_6_22'
+    port = Integer.parseInt(props.getProperty('jdbc.port'))
 }
 
 task startTomcat(type: com.bmuschko.gradle.tomcat.tasks.TomcatRunWar) {

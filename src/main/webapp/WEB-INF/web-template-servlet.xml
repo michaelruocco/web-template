@@ -14,6 +14,7 @@
        http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
 
     <context:component-scan base-package="uk.co.mruoc" />
+    <context:property-placeholder location="classpath:local.properties" />
 
     <mvc:annotation-driven />
     <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
@@ -31,10 +32,10 @@
     </bean>
 
     <bean id="mysqlDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost:3306/template" />
-        <property name="username" value="root" />
-        <property name="password" value="" />
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
     </bean>
 
     <bean id="mysqlCustomerService" class="uk.co.mruoc.service.MysqlCustomerService">
