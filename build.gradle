@@ -83,7 +83,7 @@ task startWebApp {
     startTomcat.mustRunAfter flywayMigrate
 }
 
-task acceptanceTestSetUp {
+task cucumberSetup {
     dependsOn clean, build, startEmbeddedMysql, flywayMigrate, startTomcatDaemon
     build.mustRunAfter clean
     startEmbeddedMysql.mustRunAfter build
