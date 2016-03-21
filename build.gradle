@@ -1,12 +1,13 @@
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
     }
     dependencies {
         classpath "com.github.samueltbrown:gradle-cucumber-plugin:0.9"
         classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
         classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
-        classpath 'com.github.michaelruocco.mysql:embedded-mysql-plugin:0.4.0'
+        classpath 'com.github.michaelruocco:embedded-mysql-plugin:2.0.0'
         classpath 'com.sourcemuse.gradle.plugin:gradle-mongo-plugin:0.11.0'
     }
 }
@@ -56,20 +57,18 @@ dependencies {
     tomcat 'org.apache.tomcat:tomcat-jasper:7.0.59'
 }
 
-Properties props = new Properties()
-props.load(new FileInputStream('src/main/resources/jdbc.properties'))
-URI jdbcUri = URI.create(props.getProperty("jdbc.url").substring(5));
+Properties jdbcProperties = new Properties()
+jdbcProperties.load(new FileInputStream('src/main/resources/jdbc.properties'))
 
 flyway {
-    url = props.getProperty('jdbc.url')
-    user = props.getProperty('jdbc.username')
-    password = props.getProperty('jdbc.password')
+    url = jdbcProperties.getProperty('jdbc.url')
+    user = jdbcProperties.getProperty('jdbc.username')
+    password = jdbcProperties.getProperty('jdbc.password')
 }
 
 embeddedMysql {
-    databaseName = jdbcUri.getPath().substring(1);
+    url = jdbcProperties.getProperty('jdbc.url')
     version = 'v5_6_22'
-    port = jdbcUri.getPort()
 }
 
 task startTomcat(type: com.bmuschko.gradle.tomcat.tasks.TomcatRunWar) {
