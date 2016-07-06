@@ -57,17 +57,25 @@ dependencies {
     tomcat 'org.apache.tomcat:tomcat-jasper:7.0.59'
 }
 
-Properties jdbcProperties = new Properties()
-jdbcProperties.load(new FileInputStream('src/main/resources/jdbc.properties'))
+def loadJdbcProperties() {
+    File file = new File('src/main/resources/jdbc.properties')
+    Properties jdbcProperties = new Properties()
+    if (file.exists())
+        jdbcProperties.load(new FileInputStream(file))
+    return jdbcProperties
+}
 
 flyway {
+    def jdbcProperties = loadJdbcProperties()
     url = jdbcProperties.getProperty('jdbc.url')
     user = jdbcProperties.getProperty('jdbc.username')
     password = jdbcProperties.getProperty('jdbc.password')
 }
 
 embeddedMysql {
-    url = jdbcProperties.getProperty('jdbc.url')
+    def jdbcProperties = loadJdbcProperties()
+    def jdbcUrl = jdbcProperties.getProperty('jdbc.url')
+    url = jdbcUrl == null ? "" : jdbcUrl
     version = 'v5_6_22'
 }
 
