@@ -1,6 +1,6 @@
 package uk.co.mruoc.service;
 
-import com.mysql.jdbc.StringUtils;
+import org.springframework.util.StringUtils;
 import uk.co.mruoc.InvalidCustomerIdException;
 import uk.co.mruoc.InvalidCustomerNameException;
 import uk.co.mruoc.model.Customer;
@@ -33,9 +33,9 @@ public class CustomerValidator {
     }
 
     private boolean hasName(Customer customer) {
-        if (!StringUtils.isNullOrEmpty(customer.getFirstName().trim()))
+        if (!StringUtils.isEmpty(customer.getFirstName().trim()))
             return true;
-        if (!StringUtils.isNullOrEmpty(customer.getSurname().trim()))
+        if (!StringUtils.isEmpty(customer.getSurname().trim()))
             return true;
         return false;
     }
