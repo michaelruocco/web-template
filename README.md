@@ -12,7 +12,7 @@ In order to test the application once you have cloned the repo you can
 run the following command:
 
 ```
-gradlew cucumber
+./gradlew cucumber
 ```
 
 ## Running the application
@@ -21,7 +21,7 @@ In order to test the application once you have cloned the repo you can
 run the following command:
 
 ```
-gradlew bootRun
+./gradlew bootRun
 ```
 
 Upon running this task the script will do the following:

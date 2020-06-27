@@ -3,7 +3,5 @@
 build
 target
 *.iml
-.classpath
-.project
 .settings
 bin
