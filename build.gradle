@@ -5,6 +5,7 @@ plugins {
     id 'org.unbroken-dome.test-sets' version '3.0.1'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.github.michaelruocco.embedded-mysql-plugin' version '2.1.11'
+    id 'com.wiredforcode.spawn' version '0.8.2'
 }
 
 testSets {
@@ -47,8 +48,23 @@ embeddedMysql {
     version = 'v8_0_17'
 }
 
+bootRun.dependsOn startEmbeddedMysql
+bootRun.finalizedBy stopEmbeddedMysql
+
+task startAppDaemon(type: SpawnProcessTask) {
+    dependsOn startEmbeddedMysql
+    command "java -jar ${projectDir}/build/libs/web-template-1.0.0.jar"
+    ready 'Started Application'
+    pidLockFileName '/build/.bootRun.pid.lock'
+}
+
+task stopAppDaemon(type: KillProcessTask) {
+    finalizedBy { stopEmbeddedMysql }
+    pidLockFileName '/build/.bootRun.pid.lock'
+}
+
 task cucumber() {
-    dependsOn assemble, cucumberTestClasses
+    dependsOn assemble, cucumberTestClasses, startAppDaemon
     doLast {
         javaexec {
             main = "io.cucumber.core.cli.Main"
@@ -56,7 +72,5 @@ task cucumber() {
             args = ['--plugin', 'pretty', '--glue', 'uk.co.mruoc', 'src/cucumberTest/resources']
         }
     }
+    finalizedBy { stopAppDaemon }
 }
-
-bootRun.dependsOn startEmbeddedMysql
-bootRun.finalizedBy stopEmbeddedMysql
