@@ -1,0 +1,6 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="error" th:if="${not #strings.isEmpty(error)}" th:text="${error}">
+</div>
+</body>
+</html>

@@ -1,23 +1,51 @@
 package uk.co.mruoc.facade;
 
-import uk.co.mruoc.controller.CustomerDto;
+import uk.co.mruoc.service.CustomerService;
+import uk.co.mruoc.controller.dto.CustomerDto;
+import uk.co.mruoc.model.Customer;
 
 import java.util.List;
 
-public interface CustomerFacade {
+public class CustomerFacade {
 
-    List<CustomerDto> getCustomers();
+    private final CustomerService customerService;
+    private final CustomerConverter customerConverter = new CustomerConverter();
 
-    List<CustomerDto> getCustomers(int limit, int offset);
+    public CustomerFacade(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
-    int getNumberOfCustomers();
+    public List<CustomerDto> getCustomers() {
+        List<Customer> customers = customerService.getCustomers();
+        return customerConverter.convert(customers);
+    }
 
-    CustomerDto getCustomer(String id);
+    public List<CustomerDto> getCustomers(int limit, int offset) {
+        List<Customer> customers = customerService.getCustomers(limit, offset);
+        return customerConverter.convert(customers);
+    }
 
-    void createCustomer(CustomerDto dto);
+    public int getNumberOfCustomers() {
+        return customerService.getNumberOfCustomers();
+    }
 
-    void updateCustomer(CustomerDto dto);
+    public CustomerDto getCustomer(String id) {
+        Customer customer = customerService.getCustomer(id);
+        return customerConverter.convert(customer);
+    }
 
-    void deleteCustomer(String id);
+    public void createCustomer(CustomerDto dto) {
+        Customer customer = customerConverter.convert(dto);
+        customerService.create(customer);
+    }
+
+    public void updateCustomer(CustomerDto dto) {
+        Customer customer = customerConverter.convert(dto);
+        customerService.update(customer);
+    }
+
+    public void deleteCustomer(String id) {
+        customerService.delete(id);
+    }
 
 }

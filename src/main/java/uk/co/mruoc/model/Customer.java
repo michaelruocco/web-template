@@ -1,22 +1,15 @@
 package uk.co.mruoc.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.math.BigDecimal;
 
-@Document
 public class Customer {
 
-    @Id
-    private String id;
-    private String firstName;
-    private String surname;
-    private BigDecimal balance;
+    private final String id;
+    private final String firstName;
+    private final String surname;
+    private final BigDecimal balance;
 
-    public Customer() { }
-
-    private Customer(CustomerBuilder builder) {
+    public Customer(CustomerBuilder builder) {
         this.id = builder.id;
         this.firstName = builder.firstName;
         this.surname = builder.surname;
@@ -49,10 +42,10 @@ public class Customer {
 
     public static class CustomerBuilder {
 
-        private String id;
-        private String firstName;
-        private String surname;
-        private BigDecimal balance;
+        public String id;
+        public String firstName;
+        public String surname;
+        public BigDecimal balance;
 
         public CustomerBuilder setId(String id) {
             this.id = id;

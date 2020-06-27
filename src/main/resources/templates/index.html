@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Web Template Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1 th:text="'Welcome to the ' + ${name} + ' page!'"></h1>
+    <div><a th:href="@{/customer-list}">Customer List</a></div>
+    <div><a th:href="@{/swagger-ui.html}">Explore REST API using OAS3</a></div>
+    <div><a th:href="@{/v3/api-docs}">View the RAW OAS3 definition</a></div>
+</body>
+</html>

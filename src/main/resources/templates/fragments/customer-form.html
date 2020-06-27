@@ -1,0 +1,24 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="customer-form">
+    <table border="0">
+        <tr>
+            <td>Id:</td>
+            <td><input type="text" name="id" th:field="*{id}"/></td>
+        </tr>
+        <tr>
+            <td>First Name:</td>
+            <td><input type="text" name="firstName" th:field="*{firstName}"/></td>
+        </tr>
+        <tr>
+            <td>Surname:</td>
+            <td><input type="text" name="surname" th:field="*{surname}"/></td>
+        </tr>
+        <tr>
+            <td>Balance:</td>
+            <td><input type="text" name="balance" th:field="*{balance}"/></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

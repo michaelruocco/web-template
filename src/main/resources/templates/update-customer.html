@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Update Customer</title>
+  </head>
+  <body>
+    <form action="#" th:action="@{/update-customer}" th:object="${customer}" method="post">
+      <div th:insert="/fragments/customer-form :: customer-form"></div>
+      <input type="submit" value="Update" />
+      <input type="reset" value="Reset" />
+    </form>
+    <div th:insert="/fragments/error :: error"></div>
+    <div><a th:href="@{/customer-list}">Customer List</a></div>
+  </body>
+</html>

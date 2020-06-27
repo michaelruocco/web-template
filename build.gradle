@@ -1,31 +1,18 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
-    }
-}
-
 plugins {
-    id 'com.sourcemuse.mongo' version '1.0.7'
-    id 'com.github.samueltbrown.cucumber' version '0.9'
+    id 'java-library'
+    id 'com.github.ben-manes.versions' version '0.28.0'
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
+    id 'org.unbroken-dome.test-sets' version '3.0.1'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.github.michaelruocco.embedded-mysql-plugin' version '2.1.11'
-    id 'org.flywaydb.flyway' version '6.1.0'
 }
 
-apply plugin: 'idea'
-apply plugin: 'java'
-apply plugin: 'war'
-apply plugin: 'com.bmuschko.tomcat'
-apply plugin: 'org.flywaydb.flyway'
+testSets {
+    cucumberTest
+}
 
 group 'com.github.michaelruocco'
 version '1.0.0'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -33,73 +20,43 @@ repositories {
 }
 
 dependencies {
-    compile 'org.springframework:spring-webmvc:4.2.2.RELEASE'
-    compile 'org.springframework:spring-jdbc:4.2.2.RELEASE'
-    compile 'javax.servlet:jstl:1.2'
-    compile 'javax.servlet:javax.servlet-api:3.1.0'
-    //compile 'mysql:mysql-connector-java:5.1.37'
-    compile 'mysql:mysql-connector-java:8.0.18'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.1.2'
-    compile 'org.springframework.data:spring-data-mongodb:1.8.1.RELEASE'
-    compile 'log4j:log4j:1.2.17'
-    compile 'org.slf4j:slf4j-log4j12:1.7.13'
-    compile 'io.springfox:springfox-swagger2:2.4.0'
-    compile 'io.springfox:springfox-swagger-ui:2.4.0'
+    implementation 'org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'mysql:mysql-connector-java:8.0.20'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.4.2'
+    implementation 'org.flywaydb:flyway-core:6.5.0'
 
-    testCompile 'org.assertj:assertj-core:3.3.0'
-    testCompile 'junit:junit:4.11'
-    testCompile 'info.cukes:cucumber-java:1.2.4'
-    testCompile 'info.cukes:cucumber-junit:1.2.4'
-    testCompile 'org.apache.httpcomponents:httpclient:4.5.1'
-    testCompile 'com.google.code.gson:gson:2.5'
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'org.assertj:assertj-core:3.16.1'
+    testImplementation 'org.apache.httpcomponents:httpclient:4.5.12'
+    testImplementation 'com.google.code.gson:gson:2.8.6'
 
-    tomcat 'org.apache.tomcat:tomcat-catalina:7.0.59'
-    tomcat 'org.apache.tomcat:tomcat-coyote:7.0.59'
-    tomcat 'org.apache.tomcat:tomcat-jasper:7.0.59'
+    testImplementation 'io.cucumber:cucumber-java:6.1.2'
 }
 
-def loadJdbcProperties() {
-    File file = new File('src/main/resources/jdbc.properties')
-    Properties jdbcProperties = new Properties()
-    if (file.exists())
-        jdbcProperties.load(new FileInputStream(file))
-    return jdbcProperties
-}
-
-flyway {
-    def jdbcProperties = loadJdbcProperties()
-    url = jdbcProperties.getProperty('jdbc.url')
-    user = jdbcProperties.getProperty('jdbc.username')
-    password = jdbcProperties.getProperty('jdbc.password')
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
 }
 
 embeddedMysql {
-    def jdbcProperties = loadJdbcProperties()
-    def jdbcUrl = jdbcProperties.getProperty('jdbc.url')
-    url = jdbcUrl == null ? "" : jdbcUrl
+    url = 'jdbc:mysql://localhost:3307/template'
     version = 'v8_0_17'
 }
 
-task startTomcat(type: com.bmuschko.gradle.tomcat.tasks.TomcatRunWar) {
-    daemon = false
+task cucumber() {
+    dependsOn assemble, cucumberTestClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.cucumberTest.output
+            args = ['--plugin', 'pretty', '--glue', 'uk.co.mruoc', 'src/cucumberTest/resources']
+        }
+    }
 }
 
-task startTomcatDaemon(type: com.bmuschko.gradle.tomcat.tasks.TomcatRunWar) {
-    daemon = true
-}
-
-task startWebApp {
-    dependsOn clean, build, startEmbeddedMysql, flywayMigrate, startTomcat
-    build.mustRunAfter clean
-    startEmbeddedMysql.mustRunAfter build
-    flywayMigrate.mustRunAfter startEmbeddedMysql
-    startTomcat.mustRunAfter flywayMigrate
-}
-
-task cucumberSetup {
-    dependsOn clean, build, startEmbeddedMysql, flywayMigrate, startTomcatDaemon
-    build.mustRunAfter clean
-    startEmbeddedMysql.mustRunAfter build
-    flywayMigrate.mustRunAfter startEmbeddedMysql
-    startTomcatDaemon.mustRunAfter flywayMigrate
-}
+bootRun.dependsOn startEmbeddedMysql
+bootRun.finalizedBy stopEmbeddedMysql

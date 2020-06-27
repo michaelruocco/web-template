@@ -1,8 +1,8 @@
 package uk.co.mruoc.service;
 
-import org.springframework.util.StringUtils;
-import uk.co.mruoc.InvalidCustomerIdException;
-import uk.co.mruoc.InvalidCustomerNameException;
+import org.apache.commons.lang3.StringUtils;
+import uk.co.mruoc.exception.InvalidCustomerIdException;
+import uk.co.mruoc.exception.InvalidCustomerNameException;
 import uk.co.mruoc.model.Customer;
 
 import java.util.regex.Matcher;
@@ -18,13 +18,15 @@ public class CustomerValidator {
     }
 
     private void validateId(Customer customer) {
-        if (!hasValidId(customer))
+        if (!hasValidId(customer)) {
             throw new InvalidCustomerIdException(customer.getId());
+        }
     }
 
     private void validateName(Customer customer) {
-        if (!hasName(customer))
+        if (!hasName(customer)) {
             throw new InvalidCustomerNameException(customer.getFullName());
+        }
     }
 
     private boolean hasValidId(Customer customer) {
@@ -33,11 +35,10 @@ public class CustomerValidator {
     }
 
     private boolean hasName(Customer customer) {
-        if (!StringUtils.isEmpty(customer.getFirstName().trim()))
+        if (StringUtils.isNotEmpty(customer.getFirstName().trim())) {
             return true;
-        if (!StringUtils.isEmpty(customer.getSurname().trim()))
-            return true;
-        return false;
+        }
+        return StringUtils.isNotEmpty(customer.getSurname().trim());
     }
 
 }
